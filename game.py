@@ -2,6 +2,9 @@ import pygame
 import sys
 from sprites2 import sprites, initialize_sprites, terrain_blocks
 from menu import character_selection_menu
+from level import level_layout
+from movement import handle_movement
+from collision import check_full_collision
 
 # Dimensões da tela
 screen_width = 600
@@ -10,43 +13,6 @@ screen_height = 600
 # Tamanho dos blocos
 block_size = 16
 
-# Matriz que representa a fase
-# 1 representa um bloco de terreno, 0 representa espaço vazio
-level_layout = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-]
 # Função principal do jogo
 def game_loop(screen, screen_width, screen_height):
     # Inicializa as sprites após a criação da tela
@@ -54,9 +20,6 @@ def game_loop(screen, screen_width, screen_height):
 
     # Chama a função de menu de seleção de personagens
     current_character = character_selection_menu(screen, screen_width, screen_height)
-
-    # Tamanho dos blocos
-    block_size = 16
 
     # Encontrando a terceira posição com zero de baixo para cima e da esquerda para a direita
     zero_positions = []
@@ -98,6 +61,10 @@ def game_loop(screen, screen_width, screen_height):
     current_frame = 0
     frame_duration = 50  # 50ms por frame
 
+    # Definir frame_width e frame_height inicialmente
+    frame_width = sprites[current_character][current_animation][current_frame].get_width()
+    frame_height = sprites[current_character][current_animation][current_frame].get_height()
+
     # Velocidade de movimento
     move_speed = 5
 
@@ -119,21 +86,10 @@ def game_loop(screen, screen_width, screen_height):
     clock = pygame.time.Clock()
     last_update_time = pygame.time.get_ticks()
 
-    # Função para verificar colisão com blocos sólidos
-    def check_collision(x, y):
-        col = x // block_size
-        row = y // block_size
-        if row < len(level_layout) and col < len(level_layout[0]):
-            return level_layout[row][col] == 1
-        return False
-
-    # Função para verificar colisão nos quatro cantos do personagem
-    def check_full_collision(x, y, width, height):
-        # Verificar colisão nos quatro cantos do personagem
-        return (check_collision(x, y) or
-                check_collision(x + width - 1, y) or
-                check_collision(x, y + height - 1) or
-                check_collision(x + width - 1, y + height - 1))
+    # Verificar e corrigir posição inicial do personagem
+    if check_full_collision(x_pos, y_pos, frame_width, frame_height, level_layout, block_size):
+        while check_full_collision(x_pos, y_pos, frame_width, frame_height, level_layout, block_size):
+            y_pos -= 1  # Tentar mover o personagem para cima até sair do bloco
 
     # Loop principal do jogo
     running = True
@@ -149,73 +105,13 @@ def game_loop(screen, screen_width, screen_height):
         # Obtém o estado das teclas
         keys = pygame.key.get_pressed()
 
-        # Movimentação para a esquerda
-        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
-            new_x_pos = x_pos - move_speed
-            if not check_full_collision(new_x_pos, y_pos, frame_width, frame_height):
-                x_pos = new_x_pos
-            if not is_jumping and not is_falling:
-                current_animation = 'Run'
-            facing_right = False
-
-        # Movimentação para a direita
-        elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-            new_x_pos = x_pos + move_speed
-            if not check_full_collision(new_x_pos, y_pos, frame_width, frame_height):
-                x_pos = new_x_pos
-            if not is_jumping and not is_falling:
-                current_animation = 'Run'
-            facing_right = True
-
-        # Pulo
-        if (keys[pygame.K_w] or keys[pygame.K_UP] or keys[pygame.K_SPACE]):
-            if not is_jumping and not is_falling and not jump_key_pressed:
-                is_jumping = True
-                fall_speed = jump_speed
-                current_animation = 'Jump'
-                double_jump_activated = False  # Reset double jump activation
-                jump_key_pressed = True  # Marca a tecla de pulo como pressionada
-            elif is_falling and not double_jump_activated and not jump_key_pressed:
-                is_jumping = False
-                is_falling = True
-                fall_speed = jump_speed
-                current_animation = 'Double Jump'
-                double_jump_activated = True  # Activate double jump
-                jump_key_pressed = True  # Marca a tecla de pulo como pressionada
-
-        # Aplicação da gravidade
-        # Aplicação da gravidade
-        if is_jumping or is_falling:
-            new_y_pos = y_pos + fall_speed
-            if not check_full_collision(x_pos, new_y_pos, frame_width, frame_height):
-                y_pos = new_y_pos
-                fall_speed += gravity
-            else:
-                # Corrigir a posição para ficar exatamente no bloco
-                if fall_speed > 0:  # Caindo
-                    y_pos = (y_pos // block_size) * block_size
-                fall_speed = 0
-                is_jumping = False
-                is_falling = False
-                current_animation = 'Idle'
-                double_jump_activated = False  # Reset double jump activation
-
-            if fall_speed > 0 and current_animation == 'Jump':
-                is_jumping = False
-                is_falling = True
-                current_animation = 'Fall'
-
-        # Se nenhuma tecla de movimento for pressionada e não estiver pulando ou caindo, volta para Idle
-        if not (keys[pygame.K_a] or keys[pygame.K_LEFT] or keys[pygame.K_d] or keys[pygame.K_RIGHT] or is_jumping or is_falling):
-            current_animation = 'Idle'
+        # Atualiza a posição e a animação do personagem
+        x_pos, y_pos, current_animation, facing_right, is_jumping, is_falling, fall_speed, jump_key_pressed, double_jump_activated = handle_movement(
+            x_pos, y_pos, frame_width, frame_height, keys, current_animation, current_frame,
+            facing_right, is_jumping, is_falling, jump_speed, fall_speed, gravity, move_speed,
+            block_size, level_layout, frame_duration, last_update_time, current_character, sprites, jump_key_pressed, double_jump_activated)
 
         # Limite de movimentação para não ultrapassar as bordas da janela
-        if current_frame >= len(sprites[current_character][current_animation]):
-            current_frame = 0
-
-        frame_width = sprites[current_character][current_animation][current_frame].get_width()
-        frame_height = sprites[current_character][current_animation][current_frame].get_height()
-
         if x_pos < 5:
             x_pos = 5
         elif x_pos > screen_width - frame_width - 5:
@@ -240,7 +136,7 @@ def game_loop(screen, screen_width, screen_height):
             last_update_time = current_time
 
         # Verificação de depuração
-        print(f"Animação atual: {current_animation}, Frame atual: {current_frame}")
+        #print(f"Animação atual: {current_animation}, Frame atual: {current_frame}")
 
         # Obtém a imagem do frame atual
         if current_frame >= len(sprites[current_character][current_animation]):
@@ -273,3 +169,11 @@ def game_loop(screen, screen_width, screen_height):
     # Sai do Pygame
     pygame.quit()
     sys.exit()
+
+# Inicializa o Pygame e configura a tela
+pygame.init()
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Jogo de Plataforma")
+
+# Chama a função principal do jogo
+game_loop(screen, screen_width, screen_height)
