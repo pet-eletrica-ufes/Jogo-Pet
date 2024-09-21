@@ -7,8 +7,8 @@ from movement import handle_movement
 from collision import check_full_collision
 
 # Dimensões da tela
-screen_width = 600
-screen_height = 600
+screen_width = 1280
+screen_height = 792
 
 # Tamanho dos blocos
 block_size = 16
