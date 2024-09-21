@@ -2,7 +2,7 @@ import pygame
 import sys
 from sprites2 import sprites, initialize_sprites, terrain_blocks
 from menu import character_selection_menu
-from level import level_layout
+from fase import level_layout
 from movement import handle_movement
 from collision import check_full_collision
 

@@ -1,5 +1,5 @@
 import pygame
-from collision import check_collision, check_full_collision
+from collision import check_full_collision
 
 def handle_movement(x_pos, y_pos, frame_width, frame_height, keys, current_animation, current_frame,
                     facing_right, is_jumping, is_falling, jump_speed, fall_speed, gravity, move_speed,
@@ -9,12 +9,7 @@ def handle_movement(x_pos, y_pos, frame_width, frame_height, keys, current_anima
     # Movimentação para a esquerda
     if keys[pygame.K_a] or keys[pygame.K_LEFT]:
         new_x_pos = x_pos - move_speed
-        if not check_full_collision(new_x_pos, y_pos, frame_width, frame_height, None, block_size):
-            x_pos = new_x_pos
-        else:
-            # Ajustar a posição para fora do bloco
-            while check_full_collision(x_pos - 1, y_pos, frame_width, frame_height, None, block_size):
-                x_pos += 1
+        x_pos, _, _, _ = check_full_collision(new_x_pos, y_pos, frame_width, frame_height, "horizontal", is_falling, is_jumping)
         if not is_jumping and not is_falling:
             current_animation = 'Run'
         facing_right = False
@@ -22,64 +17,55 @@ def handle_movement(x_pos, y_pos, frame_width, frame_height, keys, current_anima
     # Movimentação para a direita
     elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
         new_x_pos = x_pos + move_speed
-        if not check_full_collision(new_x_pos, y_pos, frame_width, frame_height, None, block_size):
-            x_pos = new_x_pos
-        else:
-            # Ajustar a posição para fora do bloco
-            while check_full_collision(x_pos + 1, y_pos, frame_width, frame_height, None, block_size):
-                x_pos -= 1
+        x_pos, _, _, _ = check_full_collision(new_x_pos, y_pos, frame_width, frame_height, "horizontal", is_falling, is_jumping)
         if not is_jumping and not is_falling:
             current_animation = 'Run'
         facing_right = True
 
     # Pulo
-    if (keys[pygame.K_w] or keys[pygame.K_UP] or keys[pygame.K_SPACE]):
+    if keys[pygame.K_w] or keys[pygame.K_UP] or keys[pygame.K_SPACE]:
         if not is_jumping and not is_falling and not jump_key_pressed:
             is_jumping = True
             fall_speed = jump_speed
             current_animation = 'Jump'
-            double_jump_activated = False  # Reset double jump activation
+            double_jump_activated = False  # Reset da ativação do pulo duplo
             jump_key_pressed = True  # Marca a tecla de pulo como pressionada
         elif is_jumping and not double_jump_activated and not jump_key_pressed:
             is_jumping = True
             fall_speed = jump_speed
             current_animation = 'Double Jump'
-            double_jump_activated = True  # Activate double jump
+            double_jump_activated = True  # Ativa o pulo duplo
             jump_key_pressed = True  # Marca a tecla de pulo como pressionada
 
     # Se a tecla de pulo foi liberada, permitir novo pulo duplo
     if not (keys[pygame.K_w] or keys[pygame.K_UP] or keys[pygame.K_SPACE]):
         jump_key_pressed = False
 
-    # Aplicação da gravidade se o personagem estiver no ar
-    if not is_jumping and not is_falling:
-        is_falling = True
-        fall_speed = 0
+    # Verifica se o personagem está no chão (não está pulando nem caindo)
+    _, y_pos_after_collision, is_falling, _ = check_full_collision(x_pos, y_pos + 1, frame_width, frame_height, "vertical", is_falling, is_jumping)
 
+    if not is_falling and not is_jumping:
+        # Se o personagem não estiver caindo nem pulando, ele está no chão
+        fall_speed = 0
+    else:
+        # Se houver uma queda, aplica a gravidade
+        is_falling = True
+
+    # Movimentação vertical (queda)
     if is_falling:
         new_y_pos = y_pos + fall_speed
-        if not check_full_collision(x_pos, new_y_pos, frame_width, frame_height, None, block_size):
-            y_pos = new_y_pos
-            fall_speed += gravity
-        else:
-            # Ajustar a posição para fora do bloco
-            while check_full_collision(x_pos, y_pos + 1, frame_width, frame_height, None, block_size):
-                y_pos -= 1
-            fall_speed = 0
-            is_falling = False
-            is_jumping = False
+        x_pos, y_pos, is_falling, is_jumping = check_full_collision(x_pos, new_y_pos, frame_width, frame_height, "vertical", is_falling, is_jumping)
+        fall_speed += gravity
+        if not is_falling:
             current_animation = 'Idle'
-            double_jump_activated = False  # Reset double jump activation
+            double_jump_activated = False  # Reset da ativação do pulo duplo
 
     # Verificação de colisão ao pular
     if is_jumping:
         new_y_pos = y_pos + fall_speed
-        if not check_full_collision(x_pos, new_y_pos, frame_width, frame_height, None, block_size):
-            y_pos = new_y_pos
-            fall_speed += gravity
-        else:
-            # Bateu em um bloco enquanto subia
-            is_jumping = False
+        x_pos, y_pos, is_falling, is_jumping = check_full_collision(x_pos, new_y_pos, frame_width, frame_height, "vertical", is_falling, is_jumping)
+        fall_speed += gravity
+        if not is_jumping:
             is_falling = True
             fall_speed = gravity  # Inicia a queda
             current_animation = 'Fall'
@@ -88,12 +74,10 @@ def handle_movement(x_pos, y_pos, frame_width, frame_height, keys, current_anima
     if is_jumping or is_falling:
         if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             new_x_pos = x_pos - move_speed
-            if check_full_collision(new_x_pos, y_pos, frame_width, frame_height, None, block_size):
-                x_pos += move_speed  # Reverte a movimentação se houver colisão
+            x_pos, _, _, _ = check_full_collision(new_x_pos, y_pos, frame_width, frame_height, "horizontal", is_falling, is_jumping)
         elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             new_x_pos = x_pos + move_speed
-            if check_full_collision(new_x_pos, y_pos, frame_width, frame_height, None, block_size):
-                x_pos -= move_speed  # Reverte a movimentação se houver colisão
+            x_pos, _, _, _ = check_full_collision(new_x_pos, y_pos, frame_width, frame_height, "horizontal", is_falling, is_jumping)
 
     # Se nenhuma tecla de movimento for pressionada e não estiver pulando ou caindo, volta para Idle
     if not (keys[pygame.K_a] or keys[pygame.K_LEFT] or keys[pygame.K_d] or keys[pygame.K_RIGHT] or is_jumping or is_falling):

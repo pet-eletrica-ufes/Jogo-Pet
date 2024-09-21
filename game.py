@@ -1,12 +1,13 @@
+# game.py
+
 import pygame
 import sys
 from sprites2 import sprites, initialize_sprites
 from menu import character_selection_menu
 from movement import handle_movement
 from collision import check_full_collision
-from config import screen_width, screen_height
-# Dimensões da tela
-
+from config import screen_width, screen_height, initial_x_pos, initial_y_pos, velo  # Importa as coordenadas iniciais
+from fase import carregar_fase_1, desenhar_fase  # Importa as funções de fase.py
 
 # Tamanho dos blocos (não será usado para blocos, mas para cálculos)
 block_size = 16
@@ -19,12 +20,12 @@ def game_loop(screen, screen_width, screen_height):
     # Chama a função de menu de seleção de personagens
     current_character = character_selection_menu(screen, screen_width, screen_height)
 
-    # Carrega a imagem de fundo
-    background_image = pygame.image.load('plano de fundo.jpeg').convert()
+    # Carrega o plano de fundo e objetos da fase 1
+    background_image, objetos_fase = carregar_fase_1()
 
-    # Define a posição inicial do personagem na parte inferior da tela
-    x_pos = screen_width // 2
-    y_pos = screen_height - block_size * 4  # Ajuste para estar um pouco acima da base da tela
+    # Define a posição inicial do personagem com base nas coordenadas da config
+    x_pos = initial_x_pos
+    y_pos = initial_y_pos
 
     # Define a animação e o frame atuais
     current_animation = 'Idle'
@@ -37,7 +38,7 @@ def game_loop(screen, screen_width, screen_height):
     frame_height = sprites[current_character][current_animation][current_frame].get_height()
 
     # Velocidade de movimento
-    move_speed = 5
+    move_speed = velo
 
     # Variáveis de pulo e gravidade
     is_jumping = False
@@ -45,7 +46,6 @@ def game_loop(screen, screen_width, screen_height):
     jump_speed = -10  # Ajuste este valor para alterar o tamanho do pulo
     fall_speed = 0
     gravity = 1
-    ground_level = screen_height - frame_height  # Define o nível do "chão"
     can_double_jump = True
     double_jump_activated = False  # Nova variável para controlar a ativação do pulo duplo
     jump_key_pressed = False  # Nova variável para controlar o estado da tecla de pulo
@@ -56,6 +56,10 @@ def game_loop(screen, screen_width, screen_height):
     # Inicia o relógio do Pygame
     clock = pygame.time.Clock()
     last_update_time = pygame.time.get_ticks()
+
+    ### CORREÇÃO: Verifica a colisão inicial para posicionar o personagem corretamente ###
+    # Verifica se o personagem está colidindo com o chão ou plataformas no início do jogo
+    x_pos, y_pos, is_falling, is_jumping = check_full_collision(x_pos, y_pos, frame_width, frame_height, "vertical", is_falling, is_jumping)
 
     # Loop principal do jogo
     running = True
@@ -77,19 +81,21 @@ def game_loop(screen, screen_width, screen_height):
             facing_right, is_jumping, is_falling, jump_speed, fall_speed, gravity, move_speed,
             block_size, None, frame_duration, last_update_time, current_character, sprites, jump_key_pressed, double_jump_activated)
 
-        # Limite de movimentação para não ultrapassar as bordas da janela
-        if x_pos < 5:
-            x_pos = 5
-        elif x_pos > screen_width - frame_width - 5:
-            x_pos = screen_width - frame_width - 5
+        # Verifica colisão com o chão ou plataformas
+        # Se o personagem não estiver pulando, verifica se ele está no ar (aplica gravidade)
+        if not is_jumping:
+            # Verifica se o personagem está no ar (não há colisão com o chão)
+            _, y_pos_after_collision, is_falling, _ = check_full_collision(x_pos, y_pos + 1, frame_width, frame_height, "vertical", is_falling, is_jumping)
 
-        # Impedir que o personagem caia abaixo do "chão"
-        if y_pos > ground_level:
-            y_pos = ground_level
-            is_falling = False
-            fall_speed = 0
-            is_jumping = False
-            can_double_jump = True  # Reseta a possibilidade de pulo duplo quando atinge o chão
+            if is_falling:  # Se o personagem está no ar, aplica a gravidade
+                new_y_pos = y_pos + fall_speed
+                x_pos, y_pos, is_falling, is_jumping = check_full_collision(x_pos, new_y_pos, frame_width, frame_height, "vertical", is_falling, is_jumping)
+                fall_speed += gravity
+            else:
+                fall_speed = 0  # Para a queda se o personagem estiver no chão
+
+        # Verifica colisão lateral
+        x_pos, y_pos, is_falling, is_jumping = check_full_collision(x_pos, y_pos, frame_width, frame_height, 'horizontal', is_falling, is_jumping)
 
         # Verifica se a animação mudou
         if current_animation != previous_animation:
@@ -105,10 +111,9 @@ def game_loop(screen, screen_width, screen_height):
             last_update_time = current_time
 
         # Verificação de depuração
-        #print(f"Animação atual: {current_animation}, Frame atual: {current_frame}")
+        # print(f"Animação atual: {current_animation}, Frame atual: {current_frame}")
 
-        # Obtém a imagem
-                # Obtém a imagem do frame atual
+        # Obtém a imagem do frame atual
         if current_frame >= len(sprites[current_character][current_animation]):
             current_frame = 0
 
@@ -118,8 +123,8 @@ def game_loop(screen, screen_width, screen_height):
         if not facing_right:
             frame_image = pygame.transform.flip(frame_image, True, False)
 
-        # Desenha o fundo e o personagem na tela
-        screen.blit(background_image, (0, 0))  # Desenha o fundo na tela
+        # Desenha o fundo e os objetos da fase na tela
+        desenhar_fase(screen, background_image, objetos_fase)  # Agora desenha o fundo e objetos da fase
 
         # Desenha o personagem na tela
         screen.blit(frame_image, (x_pos, y_pos))
