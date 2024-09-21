@@ -1,8 +1,8 @@
 # config.py
 
 # Dimensões da tela
-screen_width = 1280  # Exemplo de largura da tela
-screen_height = 720  # Exemplo de altura da tela
+screen_width = 600  # Exemplo de largura da tela
+screen_height = 371  # Exemplo de altura da tela
 
 # Coordenadas iniciais do personagem
 initial_x_pos = 20
