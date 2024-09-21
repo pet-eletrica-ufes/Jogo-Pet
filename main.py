@@ -1,12 +1,11 @@
 import pygame
 import game
+from config import screen_width, screen_height
 
 # Inicializa o Pygame
 pygame.init()
 
-# Define as dimensões da janela
-screen_width = 1280
-screen_height = 792
+
 
 # Cria a janela com as dimensões especificadas
 screen = pygame.display.set_mode((screen_width, screen_height))
