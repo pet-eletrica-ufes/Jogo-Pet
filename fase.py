@@ -17,5 +17,5 @@ def desenhar_fase(screen, background_image, objetos_fase):
     screen.blit(background_image, (0, 0))
 
     # Desenha os objetos da fase (ex: plataformas)
-    for objeto in objetos_fase:
-        pygame.draw.rect(screen, (255, 0, 0), objeto)  # Desenha as plataformas em vermelho
+    #for objeto in objetos_fase:
+        #pygame.draw.rect(screen, (255, 0, 0), objeto)  # Desenha as plataformas em vermelho
