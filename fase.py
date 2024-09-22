@@ -5,12 +5,12 @@ from objeto import Objeto
 # Função para carregar o plano de fundo e outros objetos da fase 1
 def carregar_fase_1():
     background_image = pygame.image.load('Sprites/plano de fundo.jpeg').convert()
-    objetos_fase = [Objeto(x=120, y=130, largura=screen_width*0.05, altura=screen_width*0.05, solido=False, imagem= None, angulo=180),
-                    Objeto(x=400, y=30, largura=screen_width*0.05, altura=screen_width*0.05, solido=False, imagem= None, angulo=0)]
-    imagens=['Sprites/lampada_desligada.png','Sprites/coração.png']
+    objetos_fase = [Objeto(x=120, y=130, largura=screen_width*0.05, altura=screen_width*0.05, solido=False, imagem= 'Sprites/lampada_desligada.png', angulo=180),
+                    Objeto(x=400, y=30, largura=screen_width*0.05, altura=screen_width*0.05, solido=False, imagem= 'Sprites/coração.png', angulo=0),
+                    Objeto(x=0, y=0, largura=screen_width, altura=screen_height, solido=False, imagem= 'Sprites/plano de fundo.jpeg', angulo=0)]
     #novo metodo de alocação de imagem de forma mais dinâmica
     for i in range(len(objetos_fase)):
-        objetos_fase[i].imagem=pygame.image.load(imagens[i]).convert()
+        objetos_fase[i].imagem=pygame.image.load(objetos_fase[i].imagem).convert()
         objetos_fase[i].imagem.set_colorkey((0, 0, 0))  # Define a cor preta como transparente (R: 0, G: 0, B: 0)
         objetos_fase[i].imagem=pygame.transform.scale(objetos_fase[i].imagem, (objetos_fase[i].largura,objetos_fase[i].altura))#redimensionando
         objetos_fase[i].imagem=pygame.transform.rotate(objetos_fase[i].imagem, objetos_fase[i].angulo)#rotacionando
@@ -25,7 +25,7 @@ def carregar_fase_1():
 # Função para desenhar a fase (plano de fundo e objetos)
 def desenhar_fase(screen, background_image, objetos_fase):
     # Desenha o plano de fundo
-    screen.blit(background_image, (0, 0))
+    #screen.blit(background_image, (0, 0))
 
     # Desenha os objetos da fase (ex: plataformas)
     for objeto in objetos_fase:
