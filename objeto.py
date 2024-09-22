@@ -1,7 +1,7 @@
 # objeto.py
 
 class Objeto:
-    def __init__(self, x, y, largura, altura, solido=True, acao=False):
+    def __init__(self, x, y, largura, altura, solido=True, acao=False, imagem= None ):
         """
         Classe que representa um objeto no jogo.
         
@@ -18,6 +18,7 @@ class Objeto:
         self.altura = altura
         self.solido = solido
         self.acao = acao
+        self.imagem= imagem
 
     def colide(self, x, y, largura, altura):
         """
