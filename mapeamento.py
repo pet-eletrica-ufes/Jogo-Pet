@@ -1,6 +1,6 @@
 # mapeamento_de_imagem.py
 from objeto import Objeto
-
+from fase import carregar_fase_1
 def obter_plataformas():
     """
     Retorna uma lista de objetos do tipo Objeto, que representam as plataformas no jogo.
@@ -12,7 +12,16 @@ def obter_plataformas():
         Objeto(x=218, y=235, largura=1066, altura=40, solido=True),
           
     ]
+    # Carregar as plataformas a partir da imagem
+    '''objetos_fase = carregar_fase_1()  # Pega a imagem da fase 1
+    
+    for objeto in objetos_fase:
+        if objeto.solido:  # Se o objeto for sólido, adiciona-o à lista de plataformas
+            plataformas.append(objeto)'''
+    #verifica a possibilidade de criar outra mecanica para carregar collision
     return plataformas
+    
+    
 
 def obter_paredes():
     """

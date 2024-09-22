@@ -19,7 +19,7 @@ def game_loop(screen, screen_width, screen_height):
     current_character = character_selection_menu(screen, screen_width, screen_height)
 
     # Carrega o plano de fundo e objetos da fase 1
-    background_image, objetos_fase = carregar_fase_1()
+    objetos_fase = carregar_fase_1()
 
     # Define a posição inicial do personagem com base nas coordenadas da config
     x_pos = initial_x_pos
@@ -137,7 +137,7 @@ def game_loop(screen, screen_width, screen_height):
             frame_image = pygame.transform.flip(frame_image, True, False)
 
         # Desenha o fundo e os objetos da fase na tela
-        desenhar_fase(screen, background_image, objetos_fase)  # Agora desenha o fundo e objetos da fase
+        desenhar_fase(screen, objetos_fase)  # Agora desenha o fundo e objetos da fase
 
         # Desenha o personagem na tela
         screen.blit(frame_image, (x_pos, y_pos))
