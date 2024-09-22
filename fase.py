@@ -7,7 +7,7 @@ def carregar_fase_1():
 
     # Carrega objetos da fase 1
     plataforma = pygame.Rect(150, 450, 250, 20)  # Exemplo de uma plataforma
-    lampada_image = pygame.image.load('Sprites/lampadas_desligada.png').convert()  # Usa convert() para otimizar
+    lampada_image = pygame.image.load('Sprites/lampada_desligada.png').convert()  # Usa convert() para otimizar
     lampada_image.set_colorkey((0, 0, 0))  # Define a cor preta como transparente (R: 0, G: 0, B: 0)
     objetos_fase.append(lampada_image)
 
