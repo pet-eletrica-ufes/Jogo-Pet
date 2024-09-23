@@ -10,7 +10,7 @@ def check_collision_bordas(x, y, width, height, dx, dy, is_falling, is_jumping):
             x = 0  # Limita a posição à borda esquerda
         elif x + width > screen_width:
             x = screen_width - width  # Limita a posição à borda direita
-
+            #print()
     if dy != 0:  # Movimento no eixo vertical
         if y < 0:
             y = 6  # Limita a posição à borda superior
@@ -33,10 +33,12 @@ def check_collision_objetos(x, y, width, height, dx, dy, objetos):
         if objeto.solido and objeto.colide(x, y, width, height):
             if dx > 0:  # Movendo-se para a direita
                 if x + width > objeto.x:  # Colisão à direita
-                    x = objeto.x - width  # Ajusta a posição para parar antes da colisão
+                    x=x-velo
+                    #x = objeto.x - width  # Ajusta a posição para parar antes da colisão
             elif dx < 0:  # Movendo-se para a esquerda
                 if x < objeto.x + objeto.largura:  # Colisão à esquerda
-                    x = objeto.x + objeto.largura  # Ajusta a posição para parar antes da colisão
+                    x=x+velo
+                    #x = objeto.x + objeto.largura  # Ajusta a posição para parar antes da colisão
 
             if dy > 0:  # Movendo-se para baixo (caindo)
                 if y + height > objeto.y:  # Colisão por baixo
