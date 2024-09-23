@@ -62,7 +62,6 @@ def handle_movement(x_pos, y_pos, frame_width, frame_height, keys, current_anima
 
     # Movimentação vertical (queda)
     if is_falling:
-        #print("entrou em queda!")
         dy = fall_speed  # Aplicar a gravidade
         new_y_pos = y_pos + dy
         x_pos, y_pos, is_falling, is_jumping = check_full_collision(x_pos, new_y_pos, frame_width, frame_height, dx, dy, is_falling, is_jumping)

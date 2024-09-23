@@ -108,6 +108,8 @@ def game_loop(screen, screen_width, screen_height):
 
         # Verifica colisão lateral (movimento horizontal)
         # Passa dx e dy para a função de colisão
+               # Verifica colisão lateral (movimento horizontal)
+        # Passa dx e dy para a função de colisão
         x_pos, y_pos, is_falling, is_jumping = check_full_collision(x_pos, y_pos, frame_width, frame_height, dx, 0, is_falling, is_jumping)
 
         # Verifica se a animação mudou
