@@ -1,7 +1,7 @@
 # objeto.py
 
 class Objeto:
-    def __init__(self, x, y, largura, altura, solido=True, acao=False, imagem= None, angulo=0 ):
+    def __init__(self, x, y, largura, altura, solido=True, acao=False, imagem= None, angulo=0,correc_altura=1 ):
         """
         Classe que representa um objeto no jogo.
         
@@ -20,6 +20,7 @@ class Objeto:
         self.acao = acao
         self.imagem= imagem
         self.angulo= angulo
+        self.correc_altura=correc_altura
     def colide(self, x, y, largura, altura):
         """
         Verifica se há colisão entre o objeto e outro retângulo.
