@@ -10,5 +10,5 @@ pygame.init()
 # Cria a janela com as dimensões especificadas
 screen = pygame.display.set_mode((screen_width, screen_height))
 
-# Chama a função principal do jogo
+# Chama a função principal do jogoo
 game.game_loop(screen, screen_width, screen_height)
