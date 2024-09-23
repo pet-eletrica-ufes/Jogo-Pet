@@ -28,6 +28,7 @@ def check_collision_objetos(x, y, width, height, dx, dy, objetos):
     """
     Verifica se há colisão com objetos sólidos e impede o avanço do personagem no eixo em questão.
     """
+    #print(objetos)
     for objeto in objetos:
         if objeto.solido and objeto.colide(x, y, width, height):
             if dx > 0:  # Movendo-se para a direita
@@ -59,7 +60,7 @@ def check_full_collision(x, y, width, height, dx, dy, is_falling, is_jumping):
     # Verifica colisão com objetos sólidos (plataformas, blocos, etc.)
     plataformas = obter_plataformas()  # Pega as plataformas mapeadas
     objetos_acao = obter_objetos_acao()  # Pega os objetos com ação, se necessário
-
+    #print(plataformas)
     # Verifica colisão com plataformas e objetos de ação (se forem sólidos)
     x, y = check_collision_objetos(x, y, width, height, dx, dy, plataformas + objetos_acao)
 
