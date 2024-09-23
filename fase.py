@@ -5,7 +5,7 @@ objetos_fase=[]
 # Função para carregar o plano de fundo e outros objetos da fase 1
 def carregar_fase_1():
     #background_image = pygame.image.load('Sprites/plano de fundo.jpeg').convert()
-    objetos_fase = [ Objeto(x=0, y=0, largura=screen_width, altura=screen_height, solido=False, imagem= 'Sprites/plano de fundo.jpeg', angulo=0),
+    objetos_fase = [ Objeto(x=0, y=0, largura=screen_width, altura=screen_height, solido=False, imagem= 'Sprites/fundo.jpg', angulo=0),
                     Objeto(x=screen_width*0.2, y=0.35*screen_height, largura=screen_width*0.05, altura=screen_width*0.05, solido=False, imagem= 'Sprites/lampada_desligada.png', angulo=180),
                     Objeto(x=screen_width*0.667, y=0.08*screen_height, largura=screen_width*0.05, altura=screen_width*0.05, solido=False, imagem= 'Sprites/coração.png', angulo=0),
                     Objeto(x=screen_width*0, y=0.90*screen_height, largura=screen_width, altura=screen_width*0.08, solido=True, imagem= 'Sprites/plataformas juntas teste (32x8).png', angulo=0)
