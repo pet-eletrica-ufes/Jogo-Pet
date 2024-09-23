@@ -1,7 +1,7 @@
 from config import screen_width, screen_height, velo
 from mapeamento import obter_plataformas, obter_objetos_acao
 
-def check_collision_bordas(x, y, width, height, dx, dy):
+def check_collision_bordas(x, y, width, height, dx, dy,is_falling, is_jumping):
     """
     Verifica se o personagem está colidindo com as bordas da tela e ajusta a posição.
 
@@ -22,10 +22,12 @@ def check_collision_bordas(x, y, width, height, dx, dy):
     if dy != 0:  # Movimento no eixo vertical
         if y < 0:
             y = 6  # Limita a posição à borda superior
+            is_falling=False
+            is_jumping=False
         elif y + height > screen_height:
             y = screen_height - height  # Limita a posição à borda inferior
 
-    return x, y
+    return x, y, is_falling, is_jumping
 
 
 def check_collision_objetos(x, y, width, height, dx, dy, objetos):
@@ -74,8 +76,9 @@ def check_full_collision(x, y, width, height, dx, dy, is_falling, is_jumping):
     :param is_jumping: Se o personagem está pulando.
     :return: Nova posição X e Y ajustada, e flags de estado (is_falling, is_jumping) atualizadas.
     """
+    #print("chamei o full collision!")
     # Verifica colisão com as bordas da tela
-    x, y = check_collision_bordas(x, y, width, height, dx, dy)
+    x, y,is_falling, is_jumping = check_collision_bordas(x, y, width, height, dx, dy,is_falling, is_jumping)
 
     # Verifica colisão com objetos sólidos (plataformas, blocos, etc.)
     plataformas = obter_plataformas()  # Pega as plataformas mapeadas
@@ -86,10 +89,12 @@ def check_full_collision(x, y, width, height, dx, dy, is_falling, is_jumping):
 
     # Verifica colisão com o chão (somente no eixo vertical)
     if dy > 0:  # Somente verifica colisão com o chão se estiver caindo
+        #print("entrou nessa porra")
         for plataforma in plataformas:
             if plataforma.solido and plataforma.colide(x, y + height, width, 1):
+                print("bateu!")
                 y = plataforma.y - height  # Ajusta para ficar em cima da plataforma
                 is_falling = False
                 is_jumping = False
-
+    
     return x, y, is_falling, is_jumping
