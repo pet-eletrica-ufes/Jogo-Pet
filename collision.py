@@ -24,7 +24,7 @@ def check_collision_bordas(x, y, width, height, dx, dy, is_falling, is_jumping):
     return x, y, is_falling, is_jumping
 
 
-def check_collision_objetos(x, y, width, height, dx, dy, objetos):
+def check_collision_objetos(x, y, width, height, dx, dy, objetos, is_falling):
     """
     Verifica se há colisão com objetos sólidos e impede o avanço do personagem no eixo em questão.
     """
@@ -48,8 +48,9 @@ def check_collision_objetos(x, y, width, height, dx, dy, objetos):
             elif dy < 0:  # Movendo-se para cima (pulando)
                 if y < objeto.y + objeto.altura:  # Colisão por cima
                     y = objeto.y + objeto.altura  # Ajusta a posição para parar antes da colisão
+                    is_falling=True
 
-    return x, y
+    return x, y, is_falling
 def is_object_below(x, y, width, height):
     """
     Verifica se há um objeto sólido diretamente abaixo do personagem.
@@ -77,7 +78,7 @@ def check_full_collision(x, y, width, height, dx, dy, is_falling, is_jumping):
     objetos_acao = obter_objetos_acao()  # Pega os objetos com ação, se necessário
     #print(plataformas)
     # Verifica colisão com plataformas e objetos de ação (se forem sólidos)
-    x, y = check_collision_objetos(x, y, width, height, dx, dy, plataformas + objetos_acao)
+    x, y,is_falling = check_collision_objetos(x, y, width, height, dx, dy, plataformas + objetos_acao,is_falling)
 
     # Verifica colisão com o chão (somente no eixo vertical)
     if dy > 0:  # Somente verifica colisão com o chão se estiver caindo
