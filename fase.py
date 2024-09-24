@@ -6,7 +6,8 @@ objetos_fase_1=[ Objeto(x=0, y=0, largura=screen_width, altura=screen_height, so
                     Objeto(x=screen_width*0.667, y=0.08*screen_height, largura=screen_width*0.05, altura=screen_width*0.05, solido=False, imagem= 'Sprites/coração.png', angulo=0),
                     Objeto(x=screen_width*0, y=0.973*screen_height, largura=screen_width*0.8, altura=screen_width*0.027, solido=True, imagem= 'Sprites/plataformas/plataforma_chao.png', angulo=0,correc_altura=0.5),
                     Objeto(x=screen_width*0.8, y=0.865*screen_height, largura=screen_width*0.2, altura=screen_width*0.14, solido=True, imagem= 'Sprites/plataformas/caixa.png', angulo=0),
-                    Objeto(x=screen_width*0, y=0.5*screen_height, largura=screen_width*0.8, altura=screen_width*0.04, solido=True, imagem= 'Sprites/plataformas/plataforma_esquerda.png', angulo=0,correc_altura=0.5)
+                    Objeto(x=screen_width*0, y=0.5*screen_height, largura=screen_width*0.8, altura=screen_width*0.04, solido=True, imagem= 'Sprites/plataformas/plataforma_esquerda.png', angulo=0,correc_altura=0.5),
+                    Objeto(x=screen_width*0.2, y=0.2*screen_height, largura=screen_width*0.8, altura=screen_width*0.04, solido=True, imagem= 'Sprites/plataformas/plataforma_direita.png', angulo=0,correc_altura=0.5)
 
 
                    ]
