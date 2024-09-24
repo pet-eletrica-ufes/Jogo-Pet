@@ -13,8 +13,8 @@ def check_collision_bordas(x, y, width, height, dx, dy, is_falling, is_jumping):
             #print()
     if dy != 0:  # Movimento no eixo vertical
         if y < 0:
-            y = 6  # Limita a posição à borda superior
-            is_falling = False
+            y = 0  # Limita a posição à borda superior
+            is_falling = True
             is_jumping = False
         elif y + height > screen_height:
             y = screen_height - height  # Limita a posição à borda inferior
@@ -50,6 +50,19 @@ def check_collision_objetos(x, y, width, height, dx, dy, objetos):
                     y = objeto.y + objeto.altura  # Ajusta a posição para parar antes da colisão
 
     return x, y
+def is_object_below(x, y, width, height):
+    """
+    Verifica se há um objeto sólido diretamente abaixo do personagem.
+    """
+    objetos=obter_plataformas()
+    for objeto in objetos:
+        if objeto.solido:
+            # Verifica se o objeto está diretamente abaixo do personagem
+            if (x + width > objeto.x and x < objeto.x + objeto.largura) and (y + height <= objeto.y and y + height + 1 >= objeto.y):
+                return False #vai ser passado para começar a queda
+    return True #is_fall
+            
+    
 
 
 def check_full_collision(x, y, width, height, dx, dy, is_falling, is_jumping):

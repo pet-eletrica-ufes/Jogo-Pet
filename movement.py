@@ -1,5 +1,5 @@
 import pygame
-from collision import check_full_collision
+from collision import check_full_collision,is_object_below
 
 def handle_movement(x_pos, y_pos, frame_width, frame_height, keys, current_animation, current_frame,
                     facing_right, is_jumping, is_falling, jump_speed, fall_speed, gravity, move_speed,
@@ -18,6 +18,7 @@ def handle_movement(x_pos, y_pos, frame_width, frame_height, keys, current_anima
         if not is_jumping and not is_falling:
             current_animation = 'Run'
         facing_right = False
+        is_falling= is_object_below(new_x_pos, y_pos, frame_width, frame_height)
 
     # Movimentação para a direita
     elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
@@ -27,7 +28,7 @@ def handle_movement(x_pos, y_pos, frame_width, frame_height, keys, current_anima
         if not is_jumping and not is_falling:
             current_animation = 'Run'
         facing_right = True
-
+        is_falling= is_object_below(new_x_pos, y_pos, frame_width, frame_height)
     # Pulo
     if keys[pygame.K_w] or keys[pygame.K_UP] or keys[pygame.K_SPACE]:
         if not is_jumping and not is_falling and not jump_key_pressed:
