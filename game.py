@@ -42,7 +42,7 @@ def game_loop(screen, screen_width, screen_height):
     is_jumping = False
     is_falling = True
     jump_speed = -10  # Ajuste este valor para alterar o tamanho do pulo
-    fall_speed = 0
+    fall_speed = 2
     gravity = gravidade
     can_double_jump = True
     double_jump_activated = False  # Nova variável para controlar a ativação do pulo duplo
