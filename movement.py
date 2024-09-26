@@ -97,4 +97,4 @@ def handle_movement(x_pos, y_pos, frame_width, frame_height, keys, current_anima
     if not (keys[pygame.K_a] or keys[pygame.K_LEFT] or keys[pygame.K_d] or keys[pygame.K_RIGHT] or is_jumping or is_falling):
         current_animation = 'Idle'
 
-    return x_pos, y_pos, current_animation, facing_right, is_jumping, is_falling, fall_speed, jump_key_pressed, double_jump_activated
+    return x_pos, y_pos, current_animation, facing_right, is_jumping, is_falling, fall_speed, jump_key_pressed, double_jump_activated,dx

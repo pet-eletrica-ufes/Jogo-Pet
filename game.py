@@ -40,7 +40,7 @@ def game_loop(screen, screen_width, screen_height):
 
     # Variáveis de pulo e gravidade
     is_jumping = False
-    is_falling = False
+    is_falling = True
     jump_speed = -10  # Ajuste este valor para alterar o tamanho do pulo
     fall_speed = 0
     gravity = gravidade
@@ -79,16 +79,16 @@ def game_loop(screen, screen_width, screen_height):
         dy = fall_speed if is_falling else 0  # Se estiver caindo, aplica a velocidade de queda
 
         # Atualiza a posição e a animação do personagem
-        x_pos, y_pos, current_animation, facing_right, is_jumping, is_falling, fall_speed, jump_key_pressed, double_jump_activated = handle_movement(
+        x_pos, y_pos, current_animation, facing_right, is_jumping, is_falling, fall_speed, jump_key_pressed, double_jump_activated,dx = handle_movement(
             x_pos, y_pos, frame_width, frame_height, keys, current_animation, current_frame,
             facing_right, is_jumping, is_falling, jump_speed, fall_speed, gravity, move_speed,
             block_size, None, frame_duration, last_update_time, current_character, sprites, jump_key_pressed, double_jump_activated)
 
         # Define o movimento horizontal (dx) com base nas teclas pressionadas
-        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+        '''if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             dx = -move_speed  # Movendo-se para a esquerda
         elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            dx = move_speed  # Movendo-se para a direita
+            dx = move_speed'''  # Movendo-se para a direita
 
         # Verifica colisão com o chão ou plataformas
         # Se o personagem não estiver pulando, verifica se ele está no ar (aplica gravidade)
