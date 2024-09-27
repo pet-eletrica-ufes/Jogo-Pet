@@ -9,7 +9,6 @@ animations = ['Run', 'Idle', 'Jump', 'Fall', 'Double Jump', 'Wall Jump']
 
 # Dicionário para armazenar as sprites de cada animação
 sprites = {char: {anim: [] for anim in animations} for char in characters}
-
 # Lista para armazenar os blocos de terreno
 terrain_blocks = []
 
